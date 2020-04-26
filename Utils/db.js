@@ -18,9 +18,7 @@ const sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
     timestamps: true, //自动创建createdAt&updatedAt
   },
 });
-sequelize.sync({
-    force:true
-});
+sequelize.sync();
 
 module.exports = {
   sequelize,

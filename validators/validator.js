@@ -53,7 +53,6 @@ class CValidator {
             path: [],
         };
     }
-
     validate(ctx) {
         let params = this._assembleAllParams(ctx);
         this.data = cloneDeep(params);
@@ -91,7 +90,21 @@ class CValidator {
             case "nickname": {
                 try {
                     ctx.verifyParams({
-                        nickname: 'string'
+                        nickname: {
+                            type:'string',
+                            max:8
+                        }
+
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "avatar":{
+                try {
+                    ctx.verifyParams({
+                        avatar: 'string'
                     });
                 } catch (e) {
                     throw  new ParameterException(obj.errMsg)
