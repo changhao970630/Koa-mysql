@@ -17,5 +17,3 @@ Koa-mysql
 
          
 ```
-
-                ![avatar](http://212.64.75.109/img/file-171b4704c10.jpg)
