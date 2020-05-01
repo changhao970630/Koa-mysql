@@ -2,7 +2,7 @@ const {get, cloneDeep} = require("lodash");
 const {ParameterException} = require("../Utils/HttpException");
 
 class CValidator {
-    constructor(Rules) {
+    constructor(Rules = []) {
         this.Rules = Rules
         this.data = {};
         this.parsed = {};
@@ -17,6 +17,7 @@ class CValidator {
             header: ctx.request.header,
         };
     }
+
     _findParam(key) {
         //拿出请求的参数
         let value;
@@ -53,6 +54,7 @@ class CValidator {
             path: [],
         };
     }
+
     validate(ctx) {
         let params = this._assembleAllParams(ctx);
         this.data = cloneDeep(params);
@@ -61,7 +63,19 @@ class CValidator {
             this.paramsCase(i, ctx)
             return this._findParam(i.name)
         })
-        return true;
+        console.log(t)
+        t = t.map(i => {
+            return {
+                [i.path[1]]: i.value
+            }
+        })
+        let obj = {}
+        console.log(t)
+        t.map(i => {
+            obj = Object.assign(obj, i)
+        })
+        console.log(obj)
+        return obj;
     }
 
     paramsCase(obj, ctx) {
@@ -91,8 +105,8 @@ class CValidator {
                 try {
                     ctx.verifyParams({
                         nickname: {
-                            type:'string',
-                            max:8
+                            type: 'string',
+                            max: 8
                         }
 
                     });
@@ -101,10 +115,42 @@ class CValidator {
                 }
                 break;
             }
-            case "avatar":{
+            case "avatar": {
                 try {
                     ctx.verifyParams({
                         avatar: 'string'
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "typeName": {
+                try {
+                    ctx.verifyParams({
+                        typeName: 'string'
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "remark": {
+                try {
+                    ctx.verifyParams({
+                        remark: 'string'
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "id": {
+                try {
+                    ctx.verifyParams({
+                        id: {
+                            type: 'number'
+                        }
                     });
                 } catch (e) {
                     throw  new ParameterException(obj.errMsg)
@@ -117,4 +163,5 @@ class CValidator {
         }
     }
 }
+
 module.exports = {CValidator};

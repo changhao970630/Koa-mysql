@@ -1,5 +1,5 @@
-const {sequelize} = require("../Utils/db");
-const {Sequelize, Model} = require("sequelize");
+const {sequelize} = require("../Utils/db");//这个是在定义模型是，挂载到的数据库信息
+const {DataTypes, Model} = require("sequelize");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken")
 
@@ -28,30 +28,30 @@ class User extends Model {
 User.init(
     {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true, //主键 不能重复  不能为空！
             autoIncrement: true,
         },
         nickname: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true,
             required: true
         },
         email: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true,
             required: true,
         },
         password: {
             required: true,
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             set(val) {
                 const salt = bcrypt.genSaltSync(10);
                 const pwd = bcrypt.hashSync(val, salt);
                 this.setDataValue('password', pwd)
             }
         },
-        avatar: Sequelize.STRING,
+        avatar: DataTypes.STRING,
     },
     {
         sequelize,

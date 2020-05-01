@@ -18,6 +18,8 @@ class InitManger {
     function whenModuleLoad(obj) {
       if (obj instanceof Router) {
         InitManger.app.use(obj.routes());
+      }else{
+        console.log('auto router fail!!')
       }
     }
   }

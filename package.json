@@ -16,6 +16,7 @@
     "koa-bodyparser": "^3.2.0",
     "koa-parameter": "^3.0.1",
     "koa-router": "^8.0.8",
+    "koa2-cors": "^2.0.6",
     "lodash": "^4.17.15",
     "mysql2": "^2.1.0",
     "require-directory": "^2.1.1",

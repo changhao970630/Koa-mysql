@@ -5,17 +5,21 @@ const {NoAuth} = require("../Utils/HttpException")
 class Auth {
     vertifyToken() {
         const vertifyToken = async (ctx, next) => {
-            try {
-                const headerToken = ctx.header.authorization
-                await jsonwebtoken.verify(headerToken, jwt.secretKey)
-                await next()
-            } catch (e) {
+            const headerToken = ctx.header.authorization
+            if (headerToken) {
+                try {
+                    await jsonwebtoken.verify(headerToken, jwt.secretKey)
+                } catch (e) {
+                    throw new NoAuth('用户验证错误！')
+                }
+            } else {
                 throw new NoAuth()
             }
+            await next()
         }
         return vertifyToken
     }
 }
 
 
-module.exports = Auth;
+module.exports = {Auth};
