@@ -4,29 +4,41 @@ const {TypeModel} = require("../models/type")
 const {Auth} = require("../middlewares/auth")
 const {CValidator} = require("../validators/validator")
 const {ParameterException, Success, NotFound} = require("../Utils/HttpException")
+const {UserModel} = require("../models/user")
+const incluedConfig = {
+    model:UserModel,
+    as:"type_user",
+    attributes:['id','nickname','email']
+}
 router.post("/types",
     new Auth().vertifyToken(),
     async (ctx) => {
         const body = new CValidator([
             {name: "typeName", errMsg: "请填写类型名称"},
             {name: "remark", errMsg: "请填写备注"},
+            {name: "user_id", errMsg: "用户失效！创建类型失败！"},
         ]).validate(ctx)
-        const {typeName, remark} = body
-        const res = await TypeModel.verifyType(typeName);//验证是否已经存在
+        const {typeName, remark,user_id} = body
+        const res = await TypeModel.verifyType(typeName,user_id);//验证该用户的类型名称是否已经存在
         if (res) {
             throw new ParameterException("类型已存在！")
         }
-        await TypeModal.create({typeName, remark});
+        await TypeModel.create({typeName, remark,user_id});
         throw new Success("类型创建成功！")
-
     })
 
 router.get("/types", new Auth().vertifyToken(), async (ctx) => {
-    const {all, page = 1, status, perPage = 10} = ctx.request.query
-    const total = await TypeModel.totalAcount(status)
+    console.log(new Auth().vertifyToken())
+    const {all, page = 1, status=1, perPage = 10,user_id} = ctx.request.query
+    const total = await TypeModel.totalAcount(status,user_id)
     let findRes;
     if (all) {
-        findRes = await TypeModel.findAll({where: {status: 1}});
+        findRes = await TypeModel.findAll(
+            {where: {status,user_id},
+                include:[
+                    incluedConfig
+                ]
+            });
         ctx.body = {
             data: findRes,
         }
@@ -35,11 +47,17 @@ router.get("/types", new Auth().vertifyToken(), async (ctx) => {
             ? await TypeModel.findAll({
                 offset: (page - 1) * Number(perPage),
                 limit: Number(perPage),
-                where: {status}
+                where: {status,user_id},
+                include:[
+                    incluedConfig
+                ]
             })
             : await TypeModel.findAll({
                 offset: (page - 1) * Number(perPage), limit: Number(perPage),
-                where: {}
+                where: {user_id},
+                include:[
+                    incluedConfig
+                ]
             })
         ctx.body = {
             data: findRes,

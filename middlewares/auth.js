@@ -8,7 +8,7 @@ class Auth {
             const headerToken = ctx.header.authorization
             if (headerToken) {
                 try {
-                    await jsonwebtoken.verify(headerToken, jwt.secretKey)
+                 await jsonwebtoken.verify(headerToken, jwt.secretKey)
                 } catch (e) {
                     throw new NoAuth('用户验证错误！')
                 }

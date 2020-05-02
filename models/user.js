@@ -1,5 +1,7 @@
 const {sequelize} = require("../Utils/db");//这个是在定义模型是，挂载到的数据库信息
 const {DataTypes, Model} = require("sequelize");
+const {EssayModel} = require("./essay")
+const {TypeModel} = require("./type")
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken")
 
@@ -17,6 +19,9 @@ class User extends Model {
                 email: hasUser.email,
             }, jwt.secretKey, {expiresIn: jwt.expiresIn})
             return {
+                id: hasUser.id,
+                nickname: hasUser.nickname,
+                email: hasUser.email,
                 token
             }
         } else {
@@ -59,6 +64,19 @@ User.init(
         tableName: "user"
     }
 );
+EssayModel.belongsTo(User,
+    {
+        as: "essay_user",
+        foreignKey: "user_id",
+        targetKey: "id"
+    })
+TypeModel.belongsTo(User,
+    {
+        as:"type_user",
+        foreignKey: "user_id",
+        targetKey: "id"
+    }
+)
 module.exports = {
     UserModel: User
 }

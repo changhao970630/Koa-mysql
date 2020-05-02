@@ -1,9 +1,12 @@
 const {sequelize} = require("../Utils/db");
 const {DataTypes, Model} = require("sequelize");
+const {EssayModel} = require("./essay")
 
 class Type extends Model {
-    static async verifyType(typeName) {
-        const hasType = await this.findOne({where: {typeName}})
+    static async verifyType(typeName, user_id) {
+        console.log(typeName, user_id)
+        return
+        const hasType = await this.findOne({where: {typeName, user_id}})
         return hasType
     }
 
@@ -12,8 +15,8 @@ class Type extends Model {
         return hasTypeId
     }
 
-    static async totalAcount(status) {
-        const findRes = typeof status === 'string' ? await this.findAll({where:{status}}) : await this.findAll()
+    static async totalAcount(status,user_id) {
+        const findRes = typeof status === 'string' ? await this.findAll({where: {status,user_id}}) : await this.findAll({where:{user_id}})
         return findRes.length
     }
 }
@@ -26,7 +29,6 @@ Type.init({
     },
     typeName: {
         type: DataTypes.STRING,
-        unique: true,
         required: true
     },
     status: {
@@ -42,4 +44,11 @@ Type.init({
     timestamps: true,
     tableName: "type"
 })
+// Type.hasMany(EssayModel,{foreignKey:"type_id"})
+EssayModel.belongsTo(Type,
+    {
+        as: "essay_type",
+        foreignKey: "type_id",
+        targetKey: "id"
+    })
 module.exports = {TypeModel: Type}

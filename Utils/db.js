@@ -19,7 +19,7 @@ const sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
     },
 });
 sequelize.sync(
-    {force:true}//强制刷新表数据！
+    // {force:true}//强制刷新表数据！
 );
 
 module.exports = {

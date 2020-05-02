@@ -5,7 +5,7 @@ class CValidator {
     constructor(Rules = []) {
         this.Rules = Rules
         this.data = {};
-        this.parsed = {};
+        // this.parsed = {};
     }
 
     _assembleAllParams(ctx) {
@@ -63,7 +63,6 @@ class CValidator {
             this.paramsCase(i, ctx)
             return this._findParam(i.name)
         })
-        console.log(t)
         t = t.map(i => {
             return {
                 [i.path[1]]: i.value
@@ -100,7 +99,6 @@ class CValidator {
                 }
                 break;
             }
-            //nickname
             case "nickname": {
                 try {
                     ctx.verifyParams({
@@ -151,6 +149,50 @@ class CValidator {
                         id: {
                             type: 'number'
                         }
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "user_id": {
+                try {
+                    ctx.verifyParams({
+                        user_id: {
+                            type: 'number'
+                        }
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break
+            }
+            case "type_id": {
+                try {
+                    ctx.verifyParams({
+                        type_id: {
+                            type: 'number'
+                        }
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break
+            }
+            case "title":{
+                try {
+                    ctx.verifyParams({
+                        title: 'string'
+                    });
+                } catch (e) {
+                    throw  new ParameterException(obj.errMsg)
+                }
+                break;
+            }
+            case "content":{
+                try {
+                    ctx.verifyParams({
+                        content: 'string'
                     });
                 } catch (e) {
                     throw  new ParameterException(obj.errMsg)
