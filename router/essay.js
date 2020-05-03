@@ -21,11 +21,10 @@ router.post('/essay', new Auth().vertifyToken(), (async ctx => {
     return
     throw new ParameterException("创建失败")
 
-}))
+}))//添加文章
 router.get('/essay', async (ctx) => {
     const {page = 1, status = 1, perPage = 10, user_id,} = ctx.request.query
-    const total =await EssayModel.totalAcount(status)
-    console.log(total);
+    const total =await EssayModel.totalUserAcount(status,user_id)
     const d = await EssayModel.findAll({
         where: {user_id, status},
         offset: (page - 1) * Number(perPage),
@@ -50,7 +49,61 @@ router.get('/essay', async (ctx) => {
             }
         }
     }
-});
+});//用户文章列表
+router.get("/public/essays",async ctx=>{
+    const {page = 1, status = 1, perPage = 10} = ctx.request.query
+    const total =await EssayModel.totalPublicAcount(status)
+    const d = await EssayModel.findAll({
+        where: {status},
+        offset: (page - 1) * Number(perPage),
+        limit: Number(perPage),
+        include: [{
+            model: TypeModel,
+            as: "essay_type",
+            attributes: ["id", "typeName", "status"],
+        }, {
+            model: UserModel,
+            as: "essay_user",
+            attributes: ['id', 'nickname', 'email', 'avatar'],
+        },
+        ]
+    })
+    ctx.body =  {
+        data: d,
+        meta: {
+            pagination: {
+                total,
+                current_page: page, perPage
+            }
+        }
+    }
+})//公共文章列表
+router.get('/essay/:id',async ctx=>{
+    const {id} = ctx.params
+    const essayDetails = await EssayModel.findOne({
+        where:{id},
+        include: [{
+            model: TypeModel,
+            as: "essay_type",
+            attributes: ["id", "typeName", "status"],
+        }, {
+            model: UserModel,
+            as: "essay_user",
+            attributes: ['id', 'nickname', 'email', 'avatar'],
+        },
+        ]
+    })
+    if(essayDetails){
+        ctx.body = essayDetails
+    }else{
+        ctx.body = {
+            message:"文章不存在！"
+        }
+    }
+})
+
+
+
 
 
 module.exports = router
