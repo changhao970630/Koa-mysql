@@ -6,7 +6,18 @@ const { UserModel } = require("../models/user");
 const { CValidator } = require("../validators/validator");
 const { Auth } = require("../middlewares/auth");
 const { ParameterException, NoAuth } = require("../Utils/HttpException");
-
+const includeConfig = [
+  {
+    model: TypeModel,
+    as: "essay_type",
+    attributes: ["id", "typeName", "status"],
+  },
+  {
+    model: UserModel,
+    as: "essay_user",
+    attributes: ["id", "nickname", "email", "avatar"],
+  },
+];
 router.post("/essay", new Auth().vertifyToken(), async (ctx) => {
   //添加文章
   const body = new CValidator([
@@ -39,18 +50,7 @@ router.get("/essay", new Auth().vertifyToken(), async (ctx) => {
     order: [["createdAt", "DESC"]],
     offset: (page - 1) * Number(perPage),
     limit: Number(perPage),
-    include: [
-      {
-        model: TypeModel,
-        as: "essay_type",
-        attributes: ["id", "typeName", "status"],
-      },
-      {
-        model: UserModel,
-        as: "essay_user",
-        attributes: ["id", "nickname", "email", "avatar"],
-      },
-    ],
+    include: includeConfig,
   });
   ctx.body = {
     data: d,
@@ -73,18 +73,7 @@ router.get("/public/essays", async (ctx) => {
     order: [["createdAt", "DESC"]],
     offset: (page - 1) * Number(perPage),
     limit: Number(perPage),
-    include: [
-      {
-        model: TypeModel,
-        as: "essay_type",
-        attributes: ["id", "typeName", "status"],
-      },
-      {
-        model: UserModel,
-        as: "essay_user",
-        attributes: ["id", "nickname", "email", "avatar"],
-      },
-    ],
+    include: includeConfig,
   });
   ctx.body = {
     data: d,
@@ -102,18 +91,7 @@ router.get("/essay/:id", async (ctx) => {
   const { id } = ctx.params;
   const essayDetails = await EssayModel.findOne({
     where: { id },
-    include: [
-      {
-        model: TypeModel,
-        as: "essay_type",
-        attributes: ["id", "typeName", "status"],
-      },
-      {
-        model: UserModel,
-        as: "essay_user",
-        attributes: ["id", "nickname", "email", "avatar"],
-      },
-    ],
+    include: includeConfig,
   });
   if (essayDetails) {
     ctx.body = essayDetails;
@@ -126,22 +104,33 @@ router.get("/essay/:id", async (ctx) => {
 
 router.delete("/essay/:id", new Auth().vertifyToken(), async (ctx) => {
   const user_id = ctx.request.user.id;
-  console.log(user_id);
   const { id } = ctx.params;
-  const vertifyFindRes = await EssayModel.findOne({
-    where: { id },
-    include: [
-      {
-        model: UserModel,
-        as: "essay_user",
-        attributes: ["id", "nickname", "email", "avatar"],
-      },
-    ],
-  });
-  if (vertifyFindRes.essay_user.id !== user_id) {
+  const isBelong = await EssayModel.userHasTheEassy(id, user_id);
+  if (!isBelong) {
     throw new NoAuth("警告！当前文章不属于您！真在进行非法操作！");
   }
-  const deleteRes = await EssayModel.update({ status: 0 }, { where: { id } });
+  await EssayModel.update({ status: 0 }, { where: { id } });
+  ctx.body = { id };
+});
+
+router.put("/essay", new Auth().vertifyToken(), async (ctx) => {
+  const body = new CValidator([
+    { name: "id", errMsg: "未选择需要修改的文章！" },
+    { name: "title", errMsg: "请填写文章标题" },
+    { name: "remark", errMsg: "请填写备注简介" },
+    { name: "content", errMsg: "请填写文章内容" },
+    { name: "type_id", errMsg: "请选择文章类型" },
+  ]).validate(ctx);
+  const { id, title, remark, content, type_id } = body;
+  const user_id = ctx.request.user.id;
+  const isBelong = await EssayModel.userHasTheEassy(id, user_id);
+  if (!isBelong) {
+    throw new NoAuth("警告！当前文章不属于您！真在进行非法操作！");
+  }
+  await EssayModel.update(
+    { title, remark, content, type_id },
+    { where: { id } }
+  );
   ctx.body = { id };
 });
 

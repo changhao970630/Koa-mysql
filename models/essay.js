@@ -10,12 +10,16 @@ class Essay extends Model {
     return findRes.length;
   }
   static async totalPublicAcount(status) {
-    //查询用户总数
+    //查询所有的文章总数
     const findRes =
       typeof status === "string"
         ? await this.findAll({ where: { status } })
         : await this.findAll({ where: {} });
     return findRes.length;
+  }
+  static async userHasTheEassy(id, user_id) {
+    const userHas = this.findOne({ where: { id, user_id } });
+    return userHas;
   }
 }
 Essay.init(

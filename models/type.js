@@ -4,13 +4,15 @@ const { EssayModel } = require("./essay");
 
 class Type extends Model {
   static async verifyType(typeName, user_id) {
+    //验证当前用户的类型名称是否有重名
     console.log(typeName, user_id);
     const hasType = await this.findOne({ where: { typeName, user_id } });
     return hasType;
   }
 
-  static async verifyTypeId(id = -999) {
-    const hasTypeId = await this.findOne({ where: { id } });
+  static async verifyTypeId(id, user_id) {
+    // 验证当前用户是否有该类型
+    const hasTypeId = await this.findOne({ where: { id, user_id } });
     return hasTypeId;
   }
 
