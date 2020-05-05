@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="489c5830-dbe4-4a49-aaad-e7f1fde6d713" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/essay.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/essay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/router/essay.js" beforeDir="false" afterPath="$PROJECT_DIR$/router/essay.js" afterDir="false" />
-    </list>
+    <list default="true" id="489c5830-dbe4-4a49-aaad-e7f1fde6d713" name="Default Changelist" comment="公共文章部分，单用户统计文章详情！。。。过几天补充前端代码'" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -90,7 +86,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="x" value="1440" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
@@ -170,12 +166,12 @@
       <workItem from="1588344216847" duration="265000" />
       <workItem from="1588377878380" duration="13127000" />
       <workItem from="1588410086124" duration="5761000" />
-      <workItem from="1588474084873" duration="5530000" />
+      <workItem from="1588474084873" duration="5673000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72789000" />
+    <option name="totallyTimeSpent" value="72932000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -187,10 +183,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1440" y="0" width="1920" height="1080" extended-state="0" />
-    <editor active="true" />
+    <frame x="1440" y="0" width="1920" height="1080" extended-state="6" />
     <layout>
-      <window_info active="true" id="Project" order="0" visible="true" weight="0.24722075" />
+      <window_info id="Project" order="0" visible="true" weight="0.24722075" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -204,7 +199,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.23326571" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.23326571" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -213,6 +208,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="公共文章部分，单用户统计文章详情！。。。过几天补充前端代码'" />
+    <option name="LAST_COMMIT_MESSAGE" value="公共文章部分，单用户统计文章详情！。。。过几天补充前端代码'" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
