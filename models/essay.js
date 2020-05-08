@@ -18,6 +18,7 @@ class Essay extends Model {
     return findRes.length;
   }
   static async userHasTheEassy(id, user_id) {
+    //验证用户的文章是否存在
     const userHas = this.findOne({ where: { id, user_id } });
     return userHas;
   }

@@ -37,6 +37,7 @@ router.get("/types", new Auth().vertifyToken(), async (ctx) => {
   let findRes;
   if (all) {
     findRes = await TypeModel.findAll({
+      order: [["createdAt", "DESC"]],
       where: { status: 1, user_id },
       include: [incluedConfig],
     });
@@ -47,12 +48,14 @@ router.get("/types", new Auth().vertifyToken(), async (ctx) => {
     findRes =
       typeof status === "string"
         ? await TypeModel.findAll({
+            order: [["createdAt", "DESC"]],
             offset: (page - 1) * Number(perPage),
             limit: Number(perPage),
             where: { status, user_id },
             include: [incluedConfig],
           })
         : await TypeModel.findAll({
+            order: [["createdAt", "DESC"]],
             offset: (page - 1) * Number(perPage),
             limit: Number(perPage),
             where: { user_id },
