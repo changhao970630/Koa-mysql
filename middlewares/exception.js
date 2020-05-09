@@ -4,7 +4,7 @@ const catchError = async (ctx, next) => {
     await next();
     // throw new Error('模拟报错')//模拟报错
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error instanceof HttpException) {
       //已知错误 使用HttpException类抛出~！
       ctx.body = {
@@ -13,7 +13,7 @@ const catchError = async (ctx, next) => {
       };
       ctx.status = error.code;
     } else {
-      console.log(error)
+      console.log(error);
       ctx.body = {
         msg: "we made a mistake | ~ ಥ_ಥ ~ |",
         request: `${ctx.method} ${ctx.path}`,

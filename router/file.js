@@ -48,8 +48,10 @@ const imageUpload = typeFileMulter("image");
 const audioUpload = typeFileMulter("audio");
 const videoUpload = typeFileMulter("video");
 router.post("/upload/image", imageUpload.single("file"), async (ctx, next) => {
+  const filename = ctx.file.filename;
   ctx.body = {
-    data: ctx.files,
+    code: 200,
+    filepath: `http://212.64.75.109/image/${filename}`,
   };
 });
 router.post("/upload/audio", audioUpload.single("file"), async (ctx, next) => {
