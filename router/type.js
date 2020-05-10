@@ -24,10 +24,10 @@ router.post("/types", new Auth().vertifyToken(), async (ctx) => {
   const { typeName, remark } = body;
   const res = await TypeModel.verifyType(typeName, user_id); //验证该用户的类型名称是否已经存在
   if (res) {
-    throw new ParameterException("类型已存在！");
+    throw new Success("类型已存在！");
   }
   await TypeModel.create({ typeName, remark, user_id });
-  throw new Success("类型创建成功！");
+  ctx.body = "";
 });
 
 router.get("/types", new Auth().vertifyToken(), async (ctx) => {
@@ -102,9 +102,12 @@ router.delete("/types/:id", new Auth().vertifyToken(), async (ctx) => {
   if (!idExist) {
     throw new NotFound("类型id不存在！");
   }
-  // const deleteRes = await idExist.destroy({where: {id: idExist.id}})
-  //这里没有判断类型是否已经被删除！
-  await TypeModel.update({ status: 0 }, { where: { id } });
+  console.log(idExist.status);
+
+  await TypeModel.update(
+    { status: idExist.status == 1 ? 0 : 1 },
+    { where: { id } }
+  );
   ctx.body = { id };
 });
 

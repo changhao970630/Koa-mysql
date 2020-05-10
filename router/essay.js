@@ -43,15 +43,28 @@ router.post("/essay", new Auth().vertifyToken(), async (ctx) => {
 router.get("/essay", new Auth().vertifyToken(), async (ctx) => {
   const user_id = ctx.request.user.id;
   //用户文章列表
-  const { page = 1, status = 1, perPage = 10 } = ctx.request.query;
-  const total = await EssayModel.totalUserAcount(status, user_id);
-  const d = await EssayModel.findAll({
-    where: { user_id, status },
-    order: [["createdAt", "DESC"]],
-    offset: (page - 1) * Number(perPage),
-    limit: Number(perPage),
-    include: includeConfig,
-  });
+  const { page = 1, status = 1, perPage = 10, type_id } = ctx.request.query;
+  let total, d;
+  if (type_id) {
+    total = await EssayModel.totalUserAcount(status, user_id, type_id);
+    d = await EssayModel.findAll({
+      where: { user_id, status, type_id },
+      order: [["createdAt", "DESC"]],
+      offset: (page - 1) * Number(perPage),
+      limit: Number(perPage),
+      include: includeConfig,
+    });
+  } else {
+    total = await EssayModel.totalUserAcount(status, user_id);
+    d = await EssayModel.findAll({
+      where: { user_id, status },
+      order: [["createdAt", "DESC"]],
+      offset: (page - 1) * Number(perPage),
+      limit: Number(perPage),
+      include: includeConfig,
+    });
+  }
+
   ctx.body = {
     data: d,
     meta: {

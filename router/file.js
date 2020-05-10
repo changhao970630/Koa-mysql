@@ -51,7 +51,8 @@ router.post("/upload/image", imageUpload.single("file"), async (ctx, next) => {
   const filename = ctx.file.filename;
   ctx.body = {
     code: 200,
-    filepath: `http://212.64.75.109/image/${filename}`,
+    filepath_local: `http://${ctx.request.header.host}/image/${filename}`,
+    filepath_online: `http://212.64.75.109/image/${filename}`,
   };
 });
 router.post("/upload/audio", audioUpload.single("file"), async (ctx, next) => {
