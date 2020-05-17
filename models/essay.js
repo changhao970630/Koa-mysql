@@ -1,5 +1,5 @@
 const { sequelize } = require("../Utils/db"); //这个是在定义模型，挂载到的数据库信息
-const { DataTypes, Model } = require("sequelize");
+const { DataTypes, Model, Op } = require("sequelize");
 class Essay extends Model {
   static async totalUserAcount(status, user_id, type_id) {
     if (type_id) {
@@ -18,12 +18,14 @@ class Essay extends Model {
       return findRes.length;
     }
   }
-  static async totalPublicAcount(status) {
+  static async totalPublicAcount(status, title) {
     //查询所有的文章总数
     const findRes =
       typeof status === "string"
-        ? await this.findAll({ where: { status } })
-        : await this.findAll({ where: {} });
+        ? await this.findAll({
+            where: { status, title: { [Op.like]: `%${title}%` } },
+          })
+        : await this.findAll({ where: { title: { [Op.like]: `%${title}%` } } });
     return findRes.length;
   }
   static async userHasTheEassy(id, user_id) {

@@ -6,6 +6,7 @@ const { UserModel } = require("../models/user");
 const { CValidator } = require("../validators/validator");
 const { Auth } = require("../middlewares/auth");
 const { ParameterException, NoAuth } = require("../Utils/HttpException");
+const { Op } = require("sequelize");
 const includeConfig = [
   {
     model: TypeModel,
@@ -79,10 +80,10 @@ router.get("/essay", new Auth().vertifyToken(), async (ctx) => {
 
 router.get("/public/essays", async (ctx) => {
   //公共文章列表
-  const { page = 1, status = 1, perPage = 10 } = ctx.request.query;
-  const total = await EssayModel.totalPublicAcount(status);
+  const { page = 1, status = 1, perPage = 10, title = "" } = ctx.request.query;
+  const total = await EssayModel.totalPublicAcount(status, title);
   const d = await EssayModel.findAll({
-    where: { status },
+    where: { status, title: { [Op.like]: `%${title}%` } },
     order: [["createdAt", "DESC"]],
     offset: (page - 1) * Number(perPage),
     limit: Number(perPage),
